@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-using TMPro.EditorUtilities;
 
 public class PlayerHealth : MonoBehaviour
 
@@ -16,6 +15,8 @@ public class PlayerHealth : MonoBehaviour
     public GameObject playerRig;
     public GameObject DeathScreenPanel;
     public TextMeshProUGUI ScoreCard;
+
+    public GameObject XRSimulator;
 
     // Start is called before the first frame update
     void Start()
@@ -57,12 +58,14 @@ public class PlayerHealth : MonoBehaviour
 
     void DeathScreen()
     {
+        XRSimulator.SetActive(false);
         onDeathScreen = true;
         DeathScreenPanel.SetActive(true);
     }
 
     public void Respwawn()
     {
+        XRSimulator.SetActive(true);
         DeathScreenPanel.SetActive(false);
         health = 10;
         onDeathScreen=false;

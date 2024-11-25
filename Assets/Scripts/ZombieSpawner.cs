@@ -18,16 +18,19 @@ public class ZombieSpawner : MonoBehaviour
     {
         while (true)
         {
-            SpawnZombies();
-            yield return new WaitForSeconds(18);
+            if (PlayerHealth.health > 0)
+            {
+                SpawnZombies();
+                yield return new WaitForSeconds(10);
+            }
         }
     }
 
     private void SpawnZombies()
     {
-        if (numberOfZombies > 8)
+        if (numberOfZombies > 4)
         {
-            numberOfZombies = 8;
+            numberOfZombies = 4;
         }
 
         for (int i = 0; i < numberOfZombies; i++)

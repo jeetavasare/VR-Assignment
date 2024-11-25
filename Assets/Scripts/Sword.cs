@@ -21,7 +21,7 @@ public class Sword : MonoBehaviour
         //Debug.Log(collision.gameObject + "zomibe mil gaya");
         //zombieHealth.TakeDamage(10);
         
-        if (collision.gameObject.CompareTag("Zombie"))
+        if (collision.gameObject.CompareTag("Zombie") && PlayerHealth.health >0)
         {
             Debug.Log("Sword hit the zombie!");
             zombieHealth.TakeDamage(damage);

@@ -1,5 +1,4 @@
 using System;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
@@ -27,6 +26,12 @@ public class ZombieController : MonoBehaviour
     private AudioSource audioSource;
     public List<AudioClip> zombieSpawn;
     public AudioClip damageSound;
+
+    public float cooldownTime = 3f;
+    public float damageFlashDuration = .3f;
+    private float lastUsedTime;
+
+    public GameObject redScreenOverlay;
 
     private string animationState = "s";
     public bool isStopped = false;
@@ -82,7 +87,11 @@ public class ZombieController : MonoBehaviour
                 isStopped = agent.isStopped;
                 //Debug.Log("Zombie has reached the player!");
                 TriggerAttackAnimation();
-                healthReductionCoroutine = StartCoroutine(ReducePlayerHealth()); // Start health reduction coroutine
+                if (!onCooldown)
+                {
+                    healthReductionCoroutine = StartCoroutine(ReducePlayerHealth()); // Start health reduction coroutine
+
+                }
             }
         }
         //chasing
@@ -94,11 +103,13 @@ public class ZombieController : MonoBehaviour
             TriggerWalkAnimation();
             isStopped = agent.isStopped;
             
-            if (healthReductionCoroutine != null)
-            {
-                StopCoroutine(healthReductionCoroutine);
-                healthReductionCoroutine = null;
-            }
+            //if (healthReductionCoroutine != null)
+            //{
+            //    StopCoroutine(healthReductionCoroutine);
+            //    onCooldown = false;
+            //    redScreenOverlay.SetActive(false);
+            //    healthReductionCoroutine = null;
+            //}
         }
         
     }
@@ -139,6 +150,21 @@ public class ZombieController : MonoBehaviour
             animator.SetTrigger(PushUpTrigger);
         }
     }
+
+    private void DamagePlayer()
+    {
+        if (Time.time > lastUsedTime + cooldownTime)
+        {
+
+            PlayerHealth.health -= ZombieDamage;
+            if (audioSource != null)
+            {
+                audioSource.PlayOneShot(damageSound);
+            
+            }
+        }
+
+    }
     private IEnumerator ReducePlayerHealth()
     {
         
@@ -162,11 +188,15 @@ public class ZombieController : MonoBehaviour
             Debug.Log("Player is dead!");
             
         }
-
+        redScreenOverlay.SetActive(true);
+        yield return new WaitForSeconds(damageFlashDuration);
+        redScreenOverlay.SetActive(false);
         // Wait for the cooldown duration
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(cooldownTime);
 
         // End cooldown
         onCooldown = false;
+        Debug.Log("Cooldown over");
+        healthReductionCoroutine = null;
     }
 }

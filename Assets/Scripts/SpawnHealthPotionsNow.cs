@@ -18,8 +18,11 @@ public class SpawnHealthPotions : MonoBehaviour
     {
         while (true)
         {
-            SpawnHealthPotionsNow();
-            yield return new WaitForSeconds(10);
+            if (PlayerHealth.health > 0)
+            {
+                SpawnHealthPotionsNow();
+                yield return new WaitForSeconds(15);
+            }
         }
     }
 
@@ -42,6 +45,6 @@ public class SpawnHealthPotions : MonoBehaviour
 
         Debug.Log("SPAWNED " + numberOfPotions.ToString() + "       !!!!!!!!!!!!!!!!!!!!!!");
 
-        numberOfPotions = Mathf.Min(numberOfPotions * 2, 16);
+        numberOfPotions = Mathf.Min(numberOfPotions * 2, 2);
     }
 }

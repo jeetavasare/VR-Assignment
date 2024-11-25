@@ -7,7 +7,7 @@ public class HealthPotion : MonoBehaviour
 {
 
     public Transform Player;
-    public float detectionRadius = 2.5f;
+    public float detectionRadius = 1.5f;
     //public TextMeshProUGUI score;
 
     private Renderer Renderer;
